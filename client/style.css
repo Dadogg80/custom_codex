@@ -37,6 +37,7 @@ body {
 
   padding-bottom: 20px;
   scroll-behavior: smooth;
+  margin-bottom: 10%;
 }
 
 /* hides scrollbar */
@@ -147,4 +148,23 @@ button {
 form img {
   width: 30px;
   height: 30px;
+}
+
+button.save {
+  background-color: rgba(21, 43, 170, 0.872); /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition-duration: 0.4s;
+}
+
+button.save:hover {
+  background-color: rgba(21, 43, 170, 0.587);
 }

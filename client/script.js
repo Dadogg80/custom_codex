@@ -83,7 +83,7 @@ const handleSubmit = async (e) => {
     // specific message div 
     const messageDiv = document.getElementById(uniqueId)
 
-    // messageDiv.innerHTML = "..."
+    messageDiv.innerHTML = "..."
     loader(messageDiv)
 
     const response = await fetch('https://codex-server-gyjn.onrender.com', {
@@ -100,11 +100,16 @@ const handleSubmit = async (e) => {
     messageDiv.innerHTML = ""
 
     if (response.ok) {
-        // get the response data 
         const data = await response.json();
-        const parsedData = data.bot.trim() // trims any trailing spaces/'\n' 
+        const parsedData = data.bot.trim();
 
-        typeText(messageDiv, parsedData)
+        // If the response includes a Google Drive link, display it in the form
+        if (data.documentLink) {
+            form.innerHTML += `<a href="${data.documentLink}" target="_blank">Open document in Google Drive</a>`;
+            console.log("link to document:", data.documentLink);
+        }
+
+        typeText(messageDiv, parsedData);
     } else {
         const err = await response.text()
 
@@ -113,9 +118,35 @@ const handleSubmit = async (e) => {
     }
 }
 
+const saveToDocButton = document.getElementById('save-to-doc');
+
+saveToDocButton.addEventListener('click', async () => {
+  const lastBotMessage = document.querySelector('.ai .message:last-child').textContent;
+
+  const response = await fetch('https://codex-server-gyjn.onrender.com', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      prompt: `save this to a document: ${lastBotMessage}`
+    })
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+    const parsedData = data.bot.trim();
+    console.log(data);
+    alert(parsedData);
+  } else {
+    const err = await response.text();
+    alert(err);
+  }
+});
+
 form.addEventListener('submit', handleSubmit)
 form.addEventListener('keyup', (e) => {
-    if (e.keyCode === 13) {
+    if (e.keyCode === 13 && !e.shiftKey) {
         handleSubmit(e)
     }
 })
